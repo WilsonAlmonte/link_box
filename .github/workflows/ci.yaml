@@ -7,6 +7,15 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [24]
     steps:
+      - uses: actions/checkout@v6
       - name: Testing ci
-        run: echo "Testing ci Step"
+        uses: pnpm/setup@c9883cc79df532ad1a7b81bf9ab944ceb090d65c
+        with:
+          runtime: node@{{ matrix.node-version }}
+          cache: true
+      - name: Run test
+        run: cd web/ && pnpm test && cd -
