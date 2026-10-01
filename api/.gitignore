@@ -1,0 +1,50 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+*.cgo1.go
+*.cgo2.c
+_cgo_defun.c
+_cgo_gotypes.go
+_cgo_export.*
+
+# Compiled Object files
+*.o
+*.a
+*.obj
+
+# Architecture specific extensions/prefixes
+*.[568vq]
+[568vq].out
+*.cgo1.go
+*.cgo2.c
+_cgo_defun.c
+_cgo_gotypes.go
+_cgo_export.*
+
+# Build output
+bin/
+build/
+dist/
+
+# Dependencies
+vendor/
+
+# Env files
+.env
+.env.*
+!.env.example
+
+# IDEs and OS
+.idea/
+.vscode/
+.DS_Store
+*.swp
