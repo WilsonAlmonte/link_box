@@ -4,7 +4,7 @@ services:
       context: ./web
       args:
         VITE_API_URL: "${VITE_API_URL}"
-        VITE_API_KEY: ${VITE_API_KEY}
+        VITE_API_KEY: ${API_KEY}
     volumes:
       - web_dist:/output
   db:
@@ -26,18 +26,15 @@ services:
       args:
         TERN_VERSION: ${TERN_VERSION}
     environment:
-      PGHOST: db
-      PGPORT: 5432
-      PGDATABASE: ${PGDATABASE}
-      PGUSER: ${PGUSER}
-      PGPASSWORD: ${PGPASSWORD}
+      DATABASE_URL: postgres://${PGUSER}:${PGPASSWORD}@db:5432/${PGDATABASE}
     depends_on:
       db:
         condition: service_healthy
   api:
-    build: ./api
-    env_file: ./api/.env
+    build:
+      context: ./api
     environment:
+      API_KEY: ${API_KEY}
       DATABASE_URL: postgres://${PGUSER}:${PGPASSWORD}@db:5432/${PGDATABASE}
     expose:
       - "8080"
