@@ -18,9 +18,13 @@ jobs:
           cache: true
           cache-dependency-path: "web/pnpm-lock.yaml"
 
+      - name: Run lint web
+        working-directory: ./web
+        run: pnpm run lint
+
       - name: Run test web
         working-directory: ./web
-        run: pnpm test
+        run: pnpm run test
 
   test-api:
     runs-on: ubuntu-26
