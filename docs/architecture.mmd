@@ -1,0 +1,29 @@
+flowchart LR
+    subgraph GitHub [GitHub]
+        direction TB
+        repo[Monorepo<br/>app + infra code] --> actions[GitHub Actions<br/>lint • test • build]
+        actions --> ghcr[GHCR<br/>images by commit SHA]
+    end
+
+    subgraph Mac [MacBook M1 Pro]
+        direction TB
+        browser[Browser<br/>localhost:8080]
+
+        subgraph Compose [Docker Compose]
+            direction TB
+            nginx[Nginx<br/>single entry point]
+            front[Frontend<br/>static web UI]
+            api[Backend API<br/>REST over HTTP]
+            db[Database<br/>persistent volume]
+
+            nginx -- "/" --> front
+            nginx -- "/api" --> api
+            api --> db
+        end
+
+        browser --> nginx
+    end
+
+    ghcr -- "pull" ---> Compose
+
+    style nginx stroke:#2a78d6,stroke-width:2px
