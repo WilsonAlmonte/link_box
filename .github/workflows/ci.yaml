@@ -1,4 +1,4 @@
-name: Linkbox CI
+name: Linkbox CI - on Pull Request
 
 on:
   pull_request:
@@ -12,10 +12,15 @@ jobs:
         node-version: [24]
     steps:
       - uses: actions/checkout@v6
+
       - name: Testing ci
         uses: pnpm/setup@c9883cc79df532ad1a7b81bf9ab944ceb090d65c
         with:
+          package-json-file: "web/package.json"
           runtime: node@{{ matrix.node-version }}
           cache: true
+          cache-dependency-path: "web/pnpm-lock.json"
+
       - name: Run test
-        run: cd web/ && pnpm test && cd -
+        working-directory: ./web
+        run: pnpm test
