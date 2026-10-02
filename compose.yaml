@@ -1,13 +1,14 @@
 services:
   web:
-    build:
-      context: ./web
-      args:
-        VITE_API_URL: "${VITE_API_URL}"
+    image: ghcr.io/wilsonalmonte/linkbox-web:sha-e4f751f
+    restart: "no"
     volumes:
       - web_dist:/output
+
+  # --- optional --- you can use the DATABASE_URL alone
   db:
     image: postgres:16-alpine
+    restart: unless-stopped
     environment:
       POSTGRES_DB: ${PGDATABASE}
       POSTGRES_USER: ${PGUSER}
@@ -19,19 +20,19 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+  # --- optional ---
   migrate:
-    build:
-      context: ./sql
-      args:
-        TERN_VERSION: ${TERN_VERSION}
+    image: ghcr.io/wilsonalmonte/linkbox-migrations:sha-e4f751f
+    restart: "no"
     environment:
       DATABASE_URL: postgres://${PGUSER}:${PGPASSWORD}@db:5432/${PGDATABASE}
     depends_on:
       db:
         condition: service_healthy
+
   api:
-    build:
-      context: ./api
+    image: ghcr.io/wilsonalmonte/linkbox-api:sha-e4f751f
+    restart: unless-stopped
     environment:
       DATABASE_URL: postgres://${PGUSER}:${PGPASSWORD}@db:5432/${PGDATABASE}
     expose:
@@ -39,8 +40,10 @@ services:
     depends_on:
       migrate:
         condition: service_completed_successfully
+
   nginx:
     image: nginx:alpine
+    restart: unless-stopped
     ports:
       - "8000:80"
     volumes:
@@ -51,6 +54,7 @@ services:
         condition: service_completed_successfully
       api:
         condition: service_started
+
 volumes:
   pg_data:
   web_dist:
