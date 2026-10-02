@@ -16,11 +16,9 @@ export interface ApiResponse {
 
 function request(path: string, init?: RequestInit) {
   const url = new URL(import.meta.env.VITE_API_URL + path);
-  const apiKey = import.meta.env.VITE_API_KEY;
   return fetch(url, {
     ...init,
     headers: {
-      "X-API-Key": apiKey,
       ...(init?.headers || {}),
     },
   });

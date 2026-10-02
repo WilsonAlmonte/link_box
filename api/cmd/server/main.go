@@ -16,16 +16,6 @@ func main() {
 	Run()
 }
 
-func ValidateKey() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		apiKey := c.GetHeader("X-API-Key")
-		if apiKey != os.Getenv("API_KEY") {
-			c.AbortWithStatus(http.StatusUnauthorized)
-		}
-		c.Next()
-	}
-}
-
 func Run() {
 	ctx := context.Background()
 	cfg, err := pgxpool.ParseConfig(os.Getenv("DATABASE_URL"))
@@ -46,8 +36,6 @@ func Run() {
 	corsConfig.AllowAllOrigins = true
 	corsConfig.AllowHeaders = append(corsConfig.AllowHeaders, "X-API-Key")
 	router.Use(cors.New(corsConfig))
-
-	router.Use(ValidateKey())
 
 	router.GET("/links", linkHandler.ListLinks)
 	router.POST("/links", linkHandler.CreateLink)

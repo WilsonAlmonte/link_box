@@ -20,8 +20,7 @@ WORKDIR /app
 # --- Stage 2: Build ---
 FROM base AS build
 ARG VITE_API_URL
-ARG VITE_API_KEY
-ENV VITE_API_URL=$VITE_API_URL \ VITE_API_KEY=$VITE_API_KEY
+ENV VITE_API_URL=$VITE_API_URL
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
 # Install ALL dependencies (including devDependencies needed for compiling/building)
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
